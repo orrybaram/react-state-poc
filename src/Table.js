@@ -1,44 +1,32 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Row from './Row';
+import { updateCellData } from './redux/actions';
 
-const createRowData = (numberOfColumns) => {
-  const rowData = {}
-  for(let i = 0; i < numberOfColumns; i++) {
-    rowData[i] = i;
+const mapStateToProps = state => {
+  return {
+    rows: state.rows,
+    sortedRows: state.sortedRows,
   }
-  return rowData;
 }
 
-const createRows = (numberOfRows, numberOfColumns) => {
-  const rows = {};
-  const rowData = createRowData(numberOfColumns);
-  for(let i = 0; i < numberOfRows; i++) {
-    rows[i] = rowData;
+const mapDispatchToProps = dispatch => {
+  return {
+    onCellBlur: data => dispatch(updateCellData(data))
   }
-  return rows;
 }
 
-const createSortedRows = (numberOfRows) => {
-  const sortedRows = [];
-  for(let i = 0; i < numberOfRows; i++) {
-    sortedRows.push(i);
-  }
-  return sortedRows;
-}
-
-export default class Table extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      sortedRows: createSortedRows(1000),
-      rows: createRows(1000, 50),
-    }
-  }
-
+class Table extends Component {
   render() {
-    const rows = this.state.sortedRows.map((rowIdx) => {
-      return <Row rowIndex={rowIdx} data={this.state.rows[rowIdx]} />
+    const rows = this.props.sortedRows.map((rowIdx) => {
+      return (
+        <Row
+          key={rowIdx}
+          rowIndex={rowIdx}
+          data={this.props.rows[rowIdx]}
+          onCellBlur={this.props.onCellBlur}
+        />
+      )
     });
 
     return (
@@ -48,3 +36,8 @@ export default class Table extends Component {
     )
   }
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Table)
