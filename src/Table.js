@@ -1,31 +1,38 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import Row from './Row';
 import { createRows, createSortedRows } from './utils';
-import { updateCellData } from './redux/actions';
 
-const mapStateToProps = state => {
-  return {
-    rows: state.rows,
-    sortedRows: state.sortedRows,
+
+export default class Table extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      sortedRows: createSortedRows(10),
+      rows: createRows(10, 10),
+    }
   }
-}
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onCellBlur: data => dispatch(updateCellData(data))
+  onCellBlur = (data) => {
+    this.setState({
+      rows: {
+        ...this.state.rows,
+        [data.rowIndex]: {
+          ...this.state.rows[data.rowIndex],
+          [data.columnIndex]: data.value,
+        }
+      }
+    });
   }
-}
 
-class Table extends Component {
   render() {
-    const rows = this.props.sortedRows.map((rowIdx) => {
+    const rows = this.state.sortedRows.map((rowIdx) => {
       return (
         <Row
           key={rowIdx}
           rowIndex={rowIdx}
-          data={this.props.rows[rowIdx]}
-          onCellBlur={this.props.onCellBlur}
+          data={this.state.rows[rowIdx]}
+          onCellBlur={this.onCellBlur}
         />
       )
     });
@@ -37,8 +44,3 @@ class Table extends Component {
     )
   }
 }
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Table)
