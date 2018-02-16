@@ -8,7 +8,6 @@ export default class Row extends Component {
       return (
       <Cell
         key={columnIndex}
-        data={this.props.data[cellData]}
         onBlur={this.props.onCellBlur}
         columnIndex={columnIndex}
         rowIndex={this.props.rowIndex}

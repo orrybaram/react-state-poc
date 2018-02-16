@@ -24,7 +24,6 @@ class Table extends Component {
           key={rowIdx}
           rowIndex={rowIdx}
           data={this.props.rows[rowIdx]}
-          onCellBlur={this.props.onCellBlur}
         />
       )
     });

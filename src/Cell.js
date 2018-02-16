@@ -1,6 +1,20 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { updateCellData } from './redux/actions';
 
-export default class Cell extends Component {
+const mapStateToProps = (state, { columnIndex, rowIndex }) => {
+  return {
+    data: state.rows[rowIndex][columnIndex],
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onCellBlur: data => dispatch(updateCellData(data))
+  }
+}
+
+class Cell extends Component {
   constructor() {
     super();
     this.state = {
@@ -24,7 +38,7 @@ export default class Cell extends Component {
     this.setState({
       isEditing: false,
     });
-    this.props.onBlur({
+    this.props.onCellBlur({
       rowIndex,
       columnIndex,
       value: e.target.value
@@ -52,3 +66,8 @@ export default class Cell extends Component {
     )
   }
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Cell)
