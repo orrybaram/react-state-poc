@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Cell from './Cell';
+import { observer } from 'mobx-react';
 
-export default class Row extends Component {
+class Row extends Component {
 
   render() {
     const cells = Object.keys(this.props.data).map((cellData, columnIndex) => {
@@ -25,3 +26,5 @@ export default class Row extends Component {
     )
   }
 }
+
+export default observer(Row);

@@ -1,31 +1,19 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { inject, observer } from 'mobx-react';
 import Row from './Row';
 import { createRows, createSortedRows } from './utils';
-import { updateCellData } from './redux/actions';
-
-const mapStateToProps = state => {
-  return {
-    rows: state.rows,
-    sortedRows: state.sortedRows,
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onCellBlur: data => dispatch(updateCellData(data))
-  }
-}
 
 class Table extends Component {
   render() {
-    const rows = this.props.sortedRows.map((rowIdx) => {
+    const { tableStore } = this.props;
+
+    const rows = tableStore.sortedRows.map((rowIdx) => {
       return (
         <Row
           key={rowIdx}
           rowIndex={rowIdx}
-          data={this.props.rows[rowIdx]}
-          onCellBlur={this.props.onCellBlur}
+          data={tableStore.rows[rowIdx]}
+          onCellBlur={tableStore.updateCellData}
         />
       )
     });
@@ -38,7 +26,4 @@ class Table extends Component {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Table)
+export default inject('tableStore')(observer(Table));
